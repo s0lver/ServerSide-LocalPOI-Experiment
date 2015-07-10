@@ -39,8 +39,7 @@ class Staypoint{
     }
 
     public function __toString() {
-        return "lat.: ".$this->latitude . ", lon.: " . $this->longitude . "; arrTime: " .
-        $this->arrival_time . ", depTime: " . $this->departure_time .", invFixes: " . $this->involved_fixes;
+        return $this->latitude.",".$this->longitude.",".$this->arrival_time.",".$this->departure_time.",".$this->involved_fixes;
     }
 
     public function store()
