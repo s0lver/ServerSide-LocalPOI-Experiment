@@ -3,8 +3,8 @@ $sql_select_temp_table_fixes = 'SELECT * FROM `smartphonefixes_temp` ORDER BY `t
 $sql_select_last_trajectory = 'SELECT * FROM `trajectories` ORDER BY ID desc LIMIT 1';
 $sql_insert_trajectory = 'INSERT INTO `trajectories` (`startTime`, `endTime`, `minDistance`, `minTime`, `maxTime`) VALUES (\'%s\',\'%s\',%d,%d,%d)';
 $sql_select_fixes = 'SELECT * FROM `smartphonefixes` WHERE `idTrajectory` = %d ORDER BY `timestamp` ASC';
-$sql_clear_table = 'DELETE FROM `smartphonefixes_temp`';
-$sql_update_trajectory_end_time = 'UPDATE `trajectories` SET `endTime`=\'%s\' WHERE `id=%d`';
+$sql_clear_temp_table = 'DELETE FROM `smartphonefixes_temp`';
+$sql_update_trajectory_end_time = 'UPDATE `trajectories` SET `endTime`=\'%s\' WHERE `id`=%d';
 
 function validate_fix_input(){
     if (!isset($_POST['latitude'])) {
@@ -20,9 +20,9 @@ function validate_fix_input(){
 }
 
 function clear_tmp_table(){
-    global $sql_clear_table;
+    global $sql_clear_temp_table;
     $connection = get_connection();
-    $connection->query($sql_clear_table);
+    $connection->query($sql_clear_temp_table);
     if ($connection->error){
         die('Could not clear fixes '.$connection->error);
     }
@@ -123,11 +123,10 @@ function update_trajectory_end_time(GpsFix $gpsFix)
     global $sql_update_trajectory_end_time;
 
     $last_id = get_last_id_trajectory();
-    $sql_insert_trajectory = sprintf($sql_update_trajectory_end_time, $gpsFix->timestamp, $last_id);
-    echo "Updating with: " . $sql_insert_trajectory;
+    $sql_update_trajectory_end_time = sprintf($sql_update_trajectory_end_time, $gpsFix->timestamp, $last_id);
 
     $connection = get_connection();
-    $connection->query($sql_insert_trajectory);
+    $connection->query($sql_update_trajectory_end_time);
 
     if ($connection->error){
         die('Could not update trajectory info'.$connection->error);

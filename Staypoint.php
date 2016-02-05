@@ -1,13 +1,13 @@
 <?php
 class Staypoint{
-    var $sql_insert_staypoint = 'INSERT INTO `pois` (`idTrajectory`,`latitude`,`longitude`,`arrivalTime`,`departureTime`) VALUES (%d,%f,%f,\'%s\',\'%s\')';
+    var $sql_insert_staypoint = 'INSERT INTO `pois` (`idTrajectory`,`latitude`,`longitude`,`arrivalTime`,`departureTime`,`fixesInvolved`) VALUES (%d,%f,%f,\'%s\',\'%s\',%d)';
 
     var $id_trajectory;
     var $latitude;
     var $longitude;
     var $arrival_time;
     var $departure_time;
-    var $involved_fixes;
+    var $fixes_involved;
 
     public function __construct($p_latitude, $p_longitude){
         $this->latitude = $p_latitude;
@@ -18,18 +18,12 @@ class Staypoint{
     {
         $size = count($fixes);
 
-        if ($size == 0) {
-            return null;
-        }
-
         $sumLat = 0.0;
         $sumLng = 0.0;
 
-        echo "New sp generated, fixes involved:\n";
         for ($i = 0; $i < $size; $i++) {
             $sumLat += $fixes[$i]->latitude;
             $sumLng += $fixes[$i]->longitude;
-            echo $fixes[$i]."\n";
         }
 
         $lat = $sumLat / $size;
@@ -38,21 +32,29 @@ class Staypoint{
         $sp = new Staypoint($lat,$lng);
         $sp->arrival_time = $fixes[0]->timestamp;
         $sp->departure_time = $fixes[$size - 1]->timestamp;
-        $sp->involved_fixes = $size;
+        $sp->fixes_involved = $size;
 
         return $sp;
     }
 
     public function __toString() {
-        return $this->latitude.",".$this->longitude.",".$this->arrival_time.",".$this->departure_time.",".$this->involved_fixes;
+        $smartphone_date_format = 'd/m/Y H:i:s';
+        $mysql_date_format = 'Y-m-d H:i:s';
+        $date_arrival = DateTime::createFromFormat($mysql_date_format, $this->arrival_time);
+        $date_departure = DateTime::createFromFormat($mysql_date_format, $this->departure_time);
+
+        $str_arrival_time = $date_arrival->format($smartphone_date_format);
+        $str_departure_time = $date_departure->format($smartphone_date_format);
+
+        return $this->latitude.",".$this->longitude.",".$str_arrival_time.",".$str_departure_time.",".$this->fixes_involved;
     }
 
     public function store()
     {
         $id_last_trajectory = get_last_id_trajectory();
         $sql_insert_staypoint = sprintf($this->sql_insert_staypoint, $id_last_trajectory,
-            $this->latitude, $this->longitude, $this->arrival_time, $this->departure_time);
-        echo "Storing with this: " . $sql_insert_staypoint." ";
+            $this->latitude, $this->longitude, $this->arrival_time, $this->departure_time, $this->fixes_involved);
+
         $connection = get_connection();
         $connection->query($sql_insert_staypoint);
 

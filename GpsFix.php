@@ -41,13 +41,13 @@ class GpsFix {
 
     public function time_difference(GpsFix $other_fix)
     {
-        $ts1 = $other_fix->timestamp;
-        $ts2 = $this->timestamp;
-        $last_date = DateTime::createFromFormat('Y-m-d H:i:s', $ts2);
+        $ts1 = $this->timestamp;
+        $ts2 = $other_fix->timestamp;
         $early_date = DateTime::createFromFormat('Y-m-d H:i:s', $ts1);
+        $last_date = DateTime::createFromFormat('Y-m-d H:i:s', $ts2);
 
         $timespan = $last_date->getTimestamp() - $early_date->getTimestamp();
-        return $timespan;
+        return $timespan * 1000; // the timespan is obtained in seconds
     }
 
     public function store(){

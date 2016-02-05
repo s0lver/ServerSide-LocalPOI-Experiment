@@ -4,6 +4,7 @@ require_once("MontoliouLive.php");
 require_once("GpsFix.php");
 require_once("Staypoint.php");
 require_once("request_tools.php");
+require_once("Logging.php");
 
 if (isset($_POST['createTrajectory'])){
     $min_time = $_POST["minTime"];

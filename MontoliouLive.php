@@ -3,17 +3,25 @@
 class MontoliouLive
 {
     var $min_time, $max_time, $min_distance;
+    var $log;
 
     public function __construct($min_time, $max_time, $min_distance)
     {
         $this->min_time = $min_time;
         $this->max_time = $max_time;
         $this->min_distance = $min_distance;
+
+        // Logging class initialization
+        $this->log = new Logging();
+
+        // set path and name of log file (optional)
+        $this->log->lfile('c:\\php-log\\mylog.txt');
     }
 
 
     function process_fix(GpsFix $fix)
     {
+        $this->log->lwrite("Processing FIX ".$fix);
         // 1.- Store the point
         $fix->store();
         $fix->store_on_temp_table();
@@ -38,35 +46,42 @@ class MontoliouLive
         $pj = $fixes[$size-1];
         $pjMinus = $fixes[$size-2];
 
-        $timespan = $pj->time_difference($pjMinus);
-        echo "timestamp is " . $timespan." ";
+        $timespan = $pjMinus->time_difference($pj);
+        //$this->log->lwrite("Timestamp is " . $timespan." ");
         if ($timespan > $this->max_time) {
+            $this->log->lwrite("Max time constraint exceeded.");
             $this->reset_table($pj);
             return null;
         }
 
         $distance = $pi->distance_to($pj);
-        echo "Distance is " . $distance." " ;
+        $this->log->lwrite("Distance is " . $distance);
         if ($distance > $this->min_distance) {
-            $pj->time_difference($pi);
-            echo "timestamp 2 is " . $timespan." ";
+            $timespan = $pi->time_difference($pj);
+            $this->log->lwrite("Timestamp is " . $timespan." ");
             if ($timespan > $this->min_time) {
                 $stay_point = Staypoint::create_from_fixes($fixes);
                 $this->reset_table($pj);
+                $this->log->lwrite("Stay point created! ".$stay_point);
+                $stay_point->store();
                 return $stay_point;
             }
             $this->reset_table($pj);
         }
 
+        return null;
     }
 
     function process_last_part()
     {
+        $stay_point = null;
         $fixes = get_temp_table_fixes();
-        $stay_point = Staypoint::create_from_fixes($fixes);
         clear_tmp_table();
 
         if (count($fixes) > 0) {
+            $stay_point = Staypoint::create_from_fixes($fixes);
+            $stay_point->store();
+            $this->log->lwrite("Creating stay point in last part: " . $stay_point);
             $lastFix = array_slice($fixes, -1)[0];
             update_trajectory_end_time($lastFix);
         }
@@ -78,5 +93,6 @@ class MontoliouLive
     {
         clear_tmp_table();
         $pj->store_on_temp_table();
+        $this->log->lwrite("Cleaning the list with: " . $pj);
     }
 }

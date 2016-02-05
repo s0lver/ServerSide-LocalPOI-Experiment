@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 03-07-2015 a las 03:36:08
+-- Tiempo de generación: 05-02-2016 a las 20:20:54
 -- Versión del servidor: 5.6.17
 -- Versión de PHP: 5.5.12
 
@@ -26,6 +26,7 @@ DELIMITER $$
 --
 -- Procedimientos
 --
+DROP PROCEDURE IF EXISTS `markEndTrajectory`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `markEndTrajectory`(idTrajectory INTEGER)
 BEGIN
 DECLARE endTrajectory timestamp;
@@ -48,6 +49,7 @@ DELIMITER ;
 -- Estructura de tabla para la tabla `pois`
 --
 
+DROP TABLE IF EXISTS `pois`;
 CREATE TABLE IF NOT EXISTS `pois` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `idTrajectory` int(11) NOT NULL,
@@ -55,8 +57,9 @@ CREATE TABLE IF NOT EXISTS `pois` (
   `longitude` decimal(18,15) NOT NULL,
   `arrivalTime` datetime NOT NULL,
   `departureTime` datetime NOT NULL,
+  `fixesInvolved` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=35 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=125 ;
 
 -- --------------------------------------------------------
 
@@ -64,6 +67,7 @@ CREATE TABLE IF NOT EXISTS `pois` (
 -- Estructura de tabla para la tabla `smartphonefixes`
 --
 
+DROP TABLE IF EXISTS `smartphonefixes`;
 CREATE TABLE IF NOT EXISTS `smartphonefixes` (
   `id` int(10) NOT NULL AUTO_INCREMENT,
   `idTrajectory` int(5) NOT NULL,
@@ -72,7 +76,7 @@ CREATE TABLE IF NOT EXISTS `smartphonefixes` (
   `timestamp` datetime NOT NULL,
   PRIMARY KEY (`id`),
   KEY `fk_PerTrajectories` (`idTrajectory`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=463 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1855 ;
 
 -- --------------------------------------------------------
 
@@ -80,6 +84,7 @@ CREATE TABLE IF NOT EXISTS `smartphonefixes` (
 -- Estructura de tabla para la tabla `smartphonefixes_temp`
 --
 
+DROP TABLE IF EXISTS `smartphonefixes_temp`;
 CREATE TABLE IF NOT EXISTS `smartphonefixes_temp` (
   `id` int(10) NOT NULL AUTO_INCREMENT,
   `idTrajectory` int(5) NOT NULL,
@@ -88,7 +93,7 @@ CREATE TABLE IF NOT EXISTS `smartphonefixes_temp` (
   `timestamp` datetime NOT NULL,
   PRIMARY KEY (`id`),
   KEY `fk_PerTrajectories` (`idTrajectory`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=616 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2627 ;
 
 -- --------------------------------------------------------
 
@@ -96,6 +101,7 @@ CREATE TABLE IF NOT EXISTS `smartphonefixes_temp` (
 -- Estructura de tabla para la tabla `trajectories`
 --
 
+DROP TABLE IF EXISTS `trajectories`;
 CREATE TABLE IF NOT EXISTS `trajectories` (
   `id` int(5) NOT NULL AUTO_INCREMENT,
   `startTime` datetime NOT NULL,
@@ -104,7 +110,7 @@ CREATE TABLE IF NOT EXISTS `trajectories` (
   `minTime` int(11) NOT NULL,
   `maxTime` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=3 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=16 ;
 
 --
 -- Restricciones para tablas volcadas
