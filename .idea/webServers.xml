@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="WebServers">
+    <option name="servers">
+      <webServer id="b6a3e0ec-fe9f-433c-8d0c-dc8bca9ab931" name="localhost" url="http://localhost/local-poi/">
+        <fileTransfer mountedRoot="C:\wamp\www\local-poi" accessType="MOUNT" />
+      </webServer>
+    </option>
+  </component>
+</project>

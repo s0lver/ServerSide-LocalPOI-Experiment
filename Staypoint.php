@@ -17,6 +17,11 @@ class Staypoint{
     public static function create_from_fixes($fixes)
     {
         $size = count($fixes);
+
+        if ($size == 0) {
+            return null;
+        }
+
         $sumLat = 0.0;
         $sumLng = 0.0;
 
@@ -47,7 +52,7 @@ class Staypoint{
         $id_last_trajectory = get_last_id_trajectory();
         $sql_insert_staypoint = sprintf($this->sql_insert_staypoint, $id_last_trajectory,
             $this->latitude, $this->longitude, $this->arrival_time, $this->departure_time);
-
+        echo "Storing with this: " . $sql_insert_staypoint." ";
         $connection = get_connection();
         $connection->query($sql_insert_staypoint);
 
