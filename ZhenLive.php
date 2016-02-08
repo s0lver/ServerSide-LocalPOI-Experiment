@@ -1,18 +1,17 @@
 <?php
 
-class MontoliouLive
+class ZhenLive
 {
-    var $min_time, $max_time, $min_distance;
+    var $min_time, $min_distance;
     var $log;
 
-    public function __construct($min_time, $max_time, $min_distance)
+    public function __construct($min_time, $min_distance)
     {
         $this->min_time = $min_time;
-        $this->max_time = $max_time;
         $this->min_distance = $min_distance;
 
         $this->log = new Logging();
-        $this->log->lfile('c:\\php-log\\mylogMontoliouLive.txt');
+        $this->log->lfile('c:\\php-log\\mylogZhenLive.txt');
     }
 
 
@@ -43,18 +42,14 @@ class MontoliouLive
         $pjMinus = $fixes[$size-2];
 
         $timespan = $pjMinus->time_difference($pj);
-        //$this->log->lwrite("Timestamp is " . $timespan." ");
         if ($timespan > $this->max_time) {
-            $this->log->lwrite("Max time constraint exceeded.");
             $this->reset_table($pj);
             return null;
         }
 
         $distance = $pi->distance_to($pj);
-        $this->log->lwrite("Distance is " . $distance);
         if ($distance > $this->min_distance) {
             $timespan = $pi->time_difference($pj);
-            $this->log->lwrite("Timestamp is " . $timespan." ");
             if ($timespan > $this->min_time) {
                 $stay_point = Staypoint::create_from_fixes($fixes);
                 $this->reset_table($pj);
