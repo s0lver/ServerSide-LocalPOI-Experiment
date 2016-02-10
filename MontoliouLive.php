@@ -12,7 +12,7 @@ class MontoliouLive
         $this->min_distance = $min_distance;
 
         $this->log = new Logging();
-        $this->log->lfile('c:\\php-log\\mylogMontoliouLive.txt');
+        $this->log->lfile('C:\\wamp\\www\\local-poi\\mylogMontoliouLive.txt');
     }
 
 
