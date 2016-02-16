@@ -5,6 +5,13 @@
       <webServer id="b6a3e0ec-fe9f-433c-8d0c-dc8bca9ab931" name="localhost" url="http://localhost/local-poi/">
         <fileTransfer mountedRoot="C:\wamp\www\local-poi" accessType="MOUNT" />
       </webServer>
+      <webServer id="6c01ad1b-5aa2-4a84-a97a-f247ca319c72" name="amsterdam" url="http://amsterdam.tamps.cinvestav.mx/~rperez/local-poi/">
+        <fileTransfer host="amsterdam.tamps.cinvestav.mx" port="22" rootFolder="/home/rperez" accessType="SFTP" username="rperez">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" />
+          </advancedOptions>
+        </fileTransfer>
+      </webServer>
     </option>
   </component>
 </project>

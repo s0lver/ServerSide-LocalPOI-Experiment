@@ -16,7 +16,7 @@ if (isset($_POST['createTrajectory'])){
     $converted_date = $date_now->format('Y-m-d H:i:s');
 
     $log = new Logging();
-    $log->lfile('C:\\wamp\\www\\local-poi\\mylogTrajectory.txt');
+    $log->lfile('./logs/mylogTrajectory.txt');
     $log->lwrite("fecha es: " . $converted_date);
 
     insert_new_trajectory($converted_date, $converted_date, $min_distance, $min_time, $max_time);
