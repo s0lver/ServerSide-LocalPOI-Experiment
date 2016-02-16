@@ -1,9 +1,9 @@
 <?php
 function get_connection(){
     $servername = "localhost";
-    $username = "root";
-    $password = "";
-    $dbname = "gpswarehouse-poi";
+    $username = "rperez";
+    $password = "ST8mXtMFs";
+    $dbname = "rperez";
 
     $connection = new mysqli($servername, $username, $password, $dbname);
 

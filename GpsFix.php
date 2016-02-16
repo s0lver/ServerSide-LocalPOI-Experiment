@@ -41,6 +41,7 @@ class GpsFix {
 
     public function time_difference(GpsFix $other_fix)
     {
+        date_default_timezone_set("America/Mexico_City");
         $ts1 = $this->timestamp;
         $ts2 = $other_fix->timestamp;
         $early_date = DateTime::createFromFormat('Y-m-d H:i:s', $ts1);

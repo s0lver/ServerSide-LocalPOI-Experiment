@@ -12,7 +12,7 @@ class MontoliouLive
         $this->min_distance = $min_distance;
 
         $this->log = new Logging();
-        $this->log->lfile('./logs/mylogMontoliouLive.txt');
+        $this->log->lfile('logs/mylogMontoliouLive.txt');
     }
 
 
@@ -78,7 +78,8 @@ class MontoliouLive
             $stay_point = Staypoint::create_from_fixes($fixes);
             $stay_point->store();
             $this->log->lwrite("Creating stay point in last part: " . $stay_point);
-            $lastFix = array_slice($fixes, -1)[0];
+            $element_as_array = array_slice($fixes, -1);
+            $lastFix = $element_as_array[0];
             update_trajectory_end_time($lastFix);
         }
 

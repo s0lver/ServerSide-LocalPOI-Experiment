@@ -11,7 +11,7 @@ class ZhenLive
         $this->min_distance = $min_distance;
 
         $this->log = new Logging();
-        $this->log->lfile('./logs/mylogZhenLive.txt');
+        $this->log->lfile('logs/mylogZhenLive.txt');
     }
 
 
