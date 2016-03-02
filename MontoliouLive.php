@@ -43,7 +43,6 @@ class MontoliouLive
         $pjMinus = $fixes[$size-2];
 
         $timespan = $pjMinus->time_difference($pj);
-        //$this->log->lwrite("Timestamp is " . $timespan." ");
         if ($timespan > $this->max_time) {
             $this->log->lwrite("Max time constraint exceeded.");
             $this->reset_table($pj);
@@ -51,10 +50,10 @@ class MontoliouLive
         }
 
         $distance = $pi->distance_to($pj);
-        $this->log->lwrite("Distance is " . $distance);
+//        $this->log->lwrite("Distance is " . $distance);
         if ($distance > $this->min_distance) {
             $timespan = $pi->time_difference($pj);
-            $this->log->lwrite("Timestamp is " . $timespan." ");
+//            $this->log->lwrite("Timestamp is " . $timespan." ");
             if ($timespan > $this->min_time) {
                 $stay_point = Staypoint::create_from_fixes($fixes);
                 $this->reset_table($pj);
@@ -90,6 +89,6 @@ class MontoliouLive
     {
         clear_tmp_table();
         $pj->store_on_temp_table();
-        $this->log->lwrite("Cleaning the list with: " . $pj);
+//        $this->log->lwrite("Cleaning the list with: " . $pj);
     }
 }

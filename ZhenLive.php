@@ -10,6 +10,7 @@ class ZhenLive
         $this->min_time = $min_time;
         $this->min_distance = $min_distance;
 
+
         $this->log = new Logging();
         $this->log->lfile('logs/mylogZhenLive.txt');
     }
@@ -39,17 +40,20 @@ class ZhenLive
 
         $pi = $fixes[0];
         $pj = $fixes[$size-1];
-        $pjMinus = $fixes[$size-2];
+//        $pjMinus = $fixes[$size-2];
 
-        $timespan = $pjMinus->time_difference($pj);
-        if ($timespan > $this->max_time) {
-            $this->reset_table($pj);
-            return null;
-        }
+//        $timespan = $pjMinus->time_difference($pj);
+//        if ($timespan > $this->max_time) {
+//        $this->log->lwrite("Max time constraint exceeded.");
+//            $this->reset_table($pj);
+//            return null;
+//        }
 
         $distance = $pi->distance_to($pj);
+//        $this->log->lwrite("Distance is " . $distance);
         if ($distance > $this->min_distance) {
             $timespan = $pi->time_difference($pj);
+//            $this->log->lwrite("Timestamp is " . $timespan." ");
             if ($timespan > $this->min_time) {
                 $stay_point = Staypoint::create_from_fixes($fixes);
                 $this->reset_table($pj);
@@ -73,7 +77,8 @@ class ZhenLive
             $stay_point = Staypoint::create_from_fixes($fixes);
             $stay_point->store();
             $this->log->lwrite("Creating stay point in last part: " . $stay_point);
-            $lastFix = array_slice($fixes, -1)[0];
+            $element_as_array = array_slice($fixes, -1);
+            $lastFix = $element_as_array[0];
             update_trajectory_end_time($lastFix);
         }
 
