@@ -1,13 +1,13 @@
 -- phpMyAdmin SQL Dump
--- version 4.1.14
+-- version 3.5.2.2
 -- http://www.phpmyadmin.net
 --
--- Servidor: 127.0.0.1
--- Tiempo de generación: 05-02-2016 a las 20:20:54
--- Versión del servidor: 5.6.17
--- Versión de PHP: 5.5.12
+-- Servidor: localhost
+-- Tiempo de generación: 02-03-2016 a las 18:01:27
+-- Versión del servidor: 5.5.40
+-- Versión de PHP: 5.3.3
 
-SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
 
 
@@ -17,36 +17,15 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8 */;
 
 --
--- Base de datos: `gpswarehouse-poi`
+-- Base de datos: `rperez`
 --
-CREATE DATABASE IF NOT EXISTS `gpswarehouse-poi` DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
-USE `gpswarehouse-poi`;
-
-DELIMITER $$
---
--- Procedimientos
---
-DROP PROCEDURE IF EXISTS `markEndTrajectory`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `markEndTrajectory`(idTrajectory INTEGER)
-BEGIN
-DECLARE endTrajectory timestamp;
-SET endTrajectory = (
-	SELECT sf.timestamp FROM smartphonefixes sf
-	WHERE sf.idTrajectory = 22
-	ORDER BY sf.timestamp DESC
-    );
-
-UPDATE gpswarehouse_sp.trajectories t
-SET t.endTime = endTrajectory
-WHERE t.id = idTrajectory;
-END$$
-
-DELIMITER ;
 
 -- --------------------------------------------------------
 
 --
 -- Estructura de tabla para la tabla `pois`
+--
+-- Creación: 16-02-2016 a las 16:01:57
 --
 
 DROP TABLE IF EXISTS `pois`;
@@ -59,12 +38,14 @@ CREATE TABLE IF NOT EXISTS `pois` (
   `departureTime` datetime NOT NULL,
   `fixesInvolved` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=125 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=388 ;
 
 -- --------------------------------------------------------
 
 --
 -- Estructura de tabla para la tabla `smartphonefixes`
+--
+-- Creación: 02-03-2016 a las 23:38:24
 --
 
 DROP TABLE IF EXISTS `smartphonefixes`;
@@ -73,15 +54,18 @@ CREATE TABLE IF NOT EXISTS `smartphonefixes` (
   `idTrajectory` int(5) NOT NULL,
   `latitude` decimal(18,15) NOT NULL,
   `longitude` decimal(18,15) NOT NULL,
+  `accuracy` decimal(18,15) NOT NULL,
   `timestamp` datetime NOT NULL,
   PRIMARY KEY (`id`),
   KEY `fk_PerTrajectories` (`idTrajectory`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1855 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=7215 ;
 
 -- --------------------------------------------------------
 
 --
 -- Estructura de tabla para la tabla `smartphonefixes_temp`
+--
+-- Creación: 02-03-2016 a las 23:38:57
 --
 
 DROP TABLE IF EXISTS `smartphonefixes_temp`;
@@ -90,15 +74,18 @@ CREATE TABLE IF NOT EXISTS `smartphonefixes_temp` (
   `idTrajectory` int(5) NOT NULL,
   `latitude` decimal(18,15) NOT NULL,
   `longitude` decimal(18,15) NOT NULL,
+  `accuracy` decimal(18,15) NOT NULL,
   `timestamp` datetime NOT NULL,
   PRIMARY KEY (`id`),
   KEY `fk_PerTrajectories` (`idTrajectory`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2627 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=615 ;
 
 -- --------------------------------------------------------
 
 --
 -- Estructura de tabla para la tabla `trajectories`
+--
+-- Creación: 16-02-2016 a las 16:01:57
 --
 
 DROP TABLE IF EXISTS `trajectories`;
@@ -110,7 +97,7 @@ CREATE TABLE IF NOT EXISTS `trajectories` (
   `minTime` int(11) NOT NULL,
   `maxTime` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=16 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=70 ;
 
 --
 -- Restricciones para tablas volcadas

@@ -1,20 +1,21 @@
 <?php
 class GpsFix {
-    var $sql_insert_fix = 'INSERT INTO `smartphonefixes` (`idTrajectory`, `latitude`, `longitude`, `timestamp`) VALUES (%d,%f,%f,\'%s\')';
-    var $sql_insert_fix_temp_table = 'INSERT INTO `smartphonefixes_temp` (`idTrajectory`, `latitude`, `longitude`, `timestamp`) VALUES (%d,%f,%f,\'%s\')';
+    var $sql_insert_fix = 'INSERT INTO `smartphonefixes` (`idTrajectory`, `latitude`, `longitude`, `timestamp`, `accuracy`) VALUES (%d,%f,%f,\'%s\',%f)';
+    var $sql_insert_fix_temp_table = 'INSERT INTO `smartphonefixes_temp` (`idTrajectory`, `latitude`, `longitude`, `timestamp`, `accuracy`) VALUES (%d,%f,%f,\'%s\',%f)';
 
-    var $latitude, $longitude, $timestamp;
+    var $latitude, $longitude, $timestamp, $accuracy;
 
-    function __construct($latitude, $longitude, $timestamp)
+    function __construct($latitude, $longitude, $timestamp, $accuracy)
     {
         $this->latitude = $latitude;
         $this->longitude = $longitude;
         $this->timestamp = $timestamp;
+        $this->accuracy = $accuracy;
     }
 
     function __toString()
     {
-        return "" . $this->latitude . ", " . $this->longitude . ", " . $this->timestamp;
+        return "" . $this->latitude . ", " . $this->longitude . ", " . $this->timestamp . ", " . $this->accuracy;
     }
 
 
@@ -22,7 +23,8 @@ class GpsFix {
         $latitude = $_POST['latitude'];
         $longitude = $_POST['longitude'];
         $timestamp = create_formated_date($_POST['timestamp']);
-        return new GpsFix($latitude, $longitude, $timestamp);
+        $accuracy = $_POST['accuracy'];
+        return new GpsFix($latitude, $longitude, $timestamp, $accuracy);
     }
 
     public function distance_to($other_fix){
@@ -56,7 +58,7 @@ class GpsFix {
 
         $connection = get_connection();
         $sql_insert_fix = sprintf($this->sql_insert_fix, $id_last_trajectory, $this->latitude, $this->longitude,
-            $this->timestamp);
+            $this->timestamp, $this->accuracy);
 
         $connection->query($sql_insert_fix);
         if ($connection->error){
@@ -71,7 +73,7 @@ class GpsFix {
         $id_last_trajectory = get_last_id_trajectory();
         $connection = get_connection();
         $sql_insert_fix = sprintf($this->sql_insert_fix_temp_table, $id_last_trajectory, $this->latitude,
-            $this->longitude, $this->timestamp);
+            $this->longitude, $this->timestamp, $this->accuracy);
         $connection->query($sql_insert_fix);
         if ($connection->error){
             die('Could not store fix'.$connection->error);
